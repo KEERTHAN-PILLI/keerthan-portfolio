@@ -1,3 +1,8 @@
+.reveal {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
 :root {
     --bg-color: #030712;
     --nav-bg: rgba(3, 7, 18, 0.5);
@@ -29,14 +34,18 @@ body {
 
 /* Background Elements */
 .bg-elements {
+    display: none;
+}
+
+#webgl-bg {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
+    z-index: -10;
+    background: #020617;
 }
 
 .blob {
@@ -273,20 +282,40 @@ section {
     align-items: center;
 }
 
-.profile-pic {
+.profile-pic-container {
+    position: relative;
     width: 300px;
-    height: 380px; /* Taller portrait ratio */
-    object-fit: cover;
-    object-position: top; /* Ensures hair is visible */
-    border-radius: 30px; /* Professional rounded corners */
+    height: 380px;
+    border-radius: 30px;
     border: 4px solid var(--accent);
     box-shadow: 0 0 30px var(--primary-glow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
 }
 
-.profile-pic:hover {
-    transform: scale(1.05);
+.profile-pic-container:hover {
+    transform: scale(1.04) translateY(-5px);
     box-shadow: 0 0 50px var(--accent-hover);
+}
+
+.profile-pic {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease;
+}
+
+.profile-pic-container:hover .profile-pic {
+    transform: scale(1.05);
+}
+
+/* Mobile responsive override */
+@media (max-width: 900px) {
+    .profile-pic-container {
+        width: 240px;
+        height: 300px;
+    }
 }
 
 .subtitle {
@@ -343,7 +372,7 @@ section {
 /* Skills Section */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
@@ -390,6 +419,26 @@ section {
 .project-card {
     transform-style: preserve-3d;
     perspective: 1000px;
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        border-color 0.4s ease;
+    will-change: transform;
+    cursor: pointer;
+    
+}
+.project-card:hover {
+    transform:
+        translateY(-15px)
+        scale(1.03)
+        rotateX(5deg)
+        rotateY(5deg);
+
+    border-color: rgba(59,130,246,0.4);
+
+    box-shadow:
+        0 25px 60px rgba(59,130,246,0.2),
+        0 0 40px rgba(139,92,246,0.15);
 }
 
 .project-card h3 {
@@ -563,6 +612,58 @@ footer {
         gap: 2rem;
         transition: 0.3s ease-in-out;
         z-index: 999;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .hero-wrapper {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 3rem;
+    }
+
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-btns {
+        justify-content: center;
+    }
+
+    .profile-pic {
+        width: 240px;
+        height: 300px;
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+@media (max-width: 900px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background: rgba(3, 7, 18, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: 0.3s ease-in-out;
+        z-index: 999;
         box-shadow: -10px 0 30px rgba(0,0,0,0.5);
     }
 
@@ -595,7 +696,18 @@ footer {
         font-size: 2.5rem;
     }
 
-    .projects-grid,
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 600px) {
+
     .skills-grid {
         grid-template-columns: 1fr;
     }
@@ -623,5 +735,685 @@ footer {
     .btn {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   ADVANCED FUTURISTIC 3D TRANSFORMATION STYLES
+   ========================================================================== */
+
+/* 1. Preloader Overlay */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #020617;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f8fafc;
+    overflow: hidden;
+}
+
+.loader-bg-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 1;
+    perspective: 500px;
+    transform: rotateX(60deg) translateY(-30%) translateZ(-100px);
+    opacity: 0.5;
+}
+
+.loader-content {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.loader-logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+    color: var(--text-main);
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.loader-logo span {
+    color: var(--accent);
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+}
+
+.loader-status {
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.loader-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    position: relative;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--secondary-glow));
+    box-shadow: 0 0 15px var(--accent);
+}
+
+.loader-percentage {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+    font-family: monospace;
+}
+
+.loader-terminal-lines {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    height: 70px;
+    overflow: hidden;
+    text-align: left;
+    background: rgba(3, 7, 18, 0.6);
+    border: 1px solid var(--glass-border);
+    padding: 0.8rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.term-line {
+    opacity: 0;
+    display: none;
+    line-height: 1.6;
+    color: var(--accent-hover);
+}
+
+.term-line.active {
+    display: block;
+    animation: typeLine 0.4s forwards;
+}
+
+@keyframes typeLine {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 0.8;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Glassmorphism Card Additions */
+.glass-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: var(--mouse-y, 0);
+    left: var(--mouse-x, 0);
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+}
+
+.glass-card:hover::before {
+    opacity: 1;
+}
+
+.glass-card>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Glow Borders on Cards */
+.project-card,
+.skill-card,
+.about-card,
+.contact-card {
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.project-card:hover,
+.skill-card:hover,
+.about-card:hover,
+.contact-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.08);
+}
+
+/* 3. Skills Galaxy and Canvas Layout */
+.skills-wrapper {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.skills-galaxy-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+}
+
+#skills-3d-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+#skills-3d-canvas:active {
+    cursor: grabbing;
+}
+
+.skills-galaxy-core {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.15) 50%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(15px);
+    animation: corePulse 4s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes corePulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1.4);
+        opacity: 0.8;
+    }
+}
+
+@media (max-width: 900px) {
+    .skills-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .skills-galaxy-container {
+        height: 350px;
+    }
+}
+
+/* 4. Profile Picture Holographic scanner styles */
+.hero-image {
+    position: relative;
+}
+
+.hero-image::before {
+    content: '';
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    border: 1px dashed rgba(59, 130, 246, 0.25);
+    border-radius: 50%;
+    animation: rotateRing 25s linear infinite;
+    z-index: -1;
+    top: -5%;
+    left: -5%;
+}
+
+.hero-image::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    border-radius: 50%;
+    animation: rotateRingReverse 35s linear infinite;
+    z-index: -2;
+    top: -10%;
+    left: -10%;
+}
+
+@keyframes rotateRing {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateRingReverse {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--accent-hover), transparent);
+    box-shadow: 0 0 15px var(--accent);
+    animation: scanEffect 4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes scanEffect {
+    0% {
+        top: 0%;
+    }
+
+    50% {
+        top: 100%;
+    }
+
+    100% {
+        top: 0%;
+    }
+}
+
+.holo-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg,
+            rgba(59, 130, 246, 0.03) 0px,
+            rgba(59, 130, 246, 0.03) 1px,
+            transparent 1px,
+            transparent 3px);
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0.7;
+}
+
+/* 5. Scroll Progress Bar glow and navigation fixes */
+.nav-links a {
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* 6. Smooth Scroll Body Adjustment */
+html.lenis {
+    height: auto;
+}
+
+.lenis-smooth {
+    scroll-behavior: initial;
+}
+
+.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
+#hero,
+#hero.reveal,
+#hero.active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    visibility: visible !important;
+}
+
+.project-card,
+.skill-card,
+.cert-item,
+.social-btn {
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    will-change: transform;
+}
+
+.project-card:hover,
+.skill-card:hover,
+.cert-item:hover {
+    transform:
+        translateY(-12px) scale(1.02) rotateX(3deg) rotateY(3deg);
+
+    box-shadow:
+        0 20px 60px rgba(59, 130, 246, 0.18),
+        0 0 25px rgba(139, 92, 246, 0.12);
+
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.12), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08), transparent 30%);
+
+    z-index: -5;
+    pointer-events: none;
+    animation: bgMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+
+    100% {
+        transform: translateY(-30px) scale(1.05);
+    }
+}
+
+/* ==========================================================================
+   ELASTIC SCROLL EFFECTS — Super Visual Enhancements
+   ========================================================================== */
+
+/* ── Smooth skew transition on sections during scroll ── */
+section,
+header {
+    will-change: transform;
+    transition: transform 0.05s linear;
+    transform-origin: center center;
+}
+
+/* ── Prevent overflow clipping during skew ── */
+body {
+    overflow-x: hidden;
+}
+
+/* ── Scroll velocity pulse ring on section entry ── */
+@keyframes entryRingPulse {
+    0%   { opacity: 0.6; transform: scale(0.8); }
+    50%  { opacity: 0.3; transform: scale(1.4); }
+    100% { opacity: 0;   transform: scale(2); }
+}
+
+.section-entry-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    border-radius: inherit;
+    pointer-events: none;
+    animation: entryRingPulse 0.8s ease-out forwards;
+    z-index: 2;
+}
+
+/* ── Elastic section title ── */
+.section-title {
+    transform-origin: left center;
+    display: inline-block;
+}
+
+/* ── Enhanced tech-tag hover bounce ── */
+.tech-tags span {
+    cursor: default;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.tech-tags span:hover {
+    transform: translateY(-4px) scale(1.12);
+    background: rgba(59, 130, 246, 0.22);
+    box-shadow: 0 4px 18px rgba(59, 130, 246, 0.3);
+}
+
+/* ── Certification item slide-in support ── */
+.cert-item {
+    transform-origin: left center;
+    overflow: visible;
+}
+
+.cert-item i {
+    transform-origin: center center;
+    display: inline-block;
+}
+
+/* ── Project card elastic hover (override old) ── */
+.project-card {
+    transform-origin: center bottom;
+}
+
+.project-card:hover {
+    transform: translateY(-18px) scale(1.04) rotateX(4deg);
+    box-shadow:
+        0 30px 70px rgba(59, 130, 246, 0.22),
+        0 0 45px rgba(139, 92, 246, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* ── Skill card elastic hover (override old) ── */
+.skill-card {
+    transform-origin: center bottom;
+}
+
+.skill-card:hover {
+    transform: translateY(-10px) scale(1.04);
+    box-shadow:
+        0 20px 50px rgba(59, 130, 246, 0.2),
+        0 0 30px rgba(139, 92, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* ── Cert item hover bounce ── */
+.cert-item:hover {
+    transform: translateX(10px) scale(1.02);
+    box-shadow:
+        0 15px 40px rgba(59, 130, 246, 0.18),
+        0 0 20px rgba(139, 92, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.4);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+}
+
+/* ── Scroll progress bar at top ── */
+#scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #60a5fa);
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(139, 92, 246, 0.4);
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
+}
+
+/* ── Floating scroll indicator (arrow) ── */
+#scroll-indicator {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.6s ease;
+}
+
+#scroll-indicator.hidden {
+    opacity: 0;
+}
+
+#scroll-indicator span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+    animation: scrollArrowBounce 1.4s ease infinite;
+}
+
+#scroll-indicator span:nth-child(2) { animation-delay: 0.2s; opacity: 0.6; }
+#scroll-indicator span:nth-child(3) { animation-delay: 0.4s; opacity: 0.3; }
+
+@keyframes scrollArrowBounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+    50%       { transform: rotate(45deg) translateY(6px); opacity: 0.4; }
+}
+
+/* ── Parallax section wrapper depth ── */
+section {
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* ── About card paragraph entrance support ── */
+.about-card p {
+    transform-origin: left center;
+}
+
+/* ── Social button elastic hover ── */
+.social-btn {
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease !important;
+}
+
+.social-btn:hover {
+    transform: translateY(-8px) scale(1.08) !important;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* ── Particle burst keyframe (CSS fallback) ── */
+@keyframes particleFly {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--px), var(--py)) scale(0); opacity: 0; }
+}
+
+/* ── Glass card inner glow enhancement ── */
+.glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 50%,
+        rgba(59, 130, 246, 0.03) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.4s ease;
+    opacity: 0;
+}
+
+.glass-card:hover::after {
+    opacity: 1;
+}
+
+/* ── Progress bar elastic fill glow pulse ── */
+.progress-fill {
+    position: relative;
+    overflow: visible;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(59, 130, 246, 0.5);
+    animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+    50%       { transform: translateY(-50%) scale(1.5); opacity: 0.5; }
+}
+
+/* ── Responsive: disable heavy skew on mobile ── */
+@media (max-width: 768px) {
+    section, header {
+        transition: none;
+    }
+    .progress-fill::after {
+        width: 8px;
+        height: 8px;
     }
 }
